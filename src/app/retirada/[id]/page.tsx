@@ -49,8 +49,8 @@ export default async function RetiradaPage({
   const morador = result.encomendas[0]?.morador;
   const prefillCpf = morador?.cpf ?? null;
   const moradorSignaturePath = morador?.signatureUrl ?? null;
-  const signatureImageUrl = morador?.id
-    ? await storageService.getMoradorSignatureUrl(morador.id)
+  const signatureImageUrl = moradorSignaturePath
+    ? await storageService.createSignedUrl(moradorSignaturePath)
     : null;
 
   return (

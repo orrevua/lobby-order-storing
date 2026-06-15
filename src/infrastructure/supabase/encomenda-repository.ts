@@ -172,7 +172,7 @@ export class SupabaseEncomendaRepository implements EncomendaRepository {
     const { data, error } = await this.client
       .from('encomendas')
       .update({
-        status: 'entregue',
+        status: 'retirada',
         data_retirada: new Date().toISOString(),
       })
       .in('id', ids)
