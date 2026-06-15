@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { confirmWithdrawalManual } from '@/application/use-cases/retirada/confirm-withdrawal-manual';
 import { packageRepository, withdrawalSessionRepository } from '@/infrastructure/supabase/repositories';
 
@@ -22,6 +23,9 @@ export async function POST(
       confirmedBy,
       cpf: cpf ?? null,
     });
+
+    revalidatePath('/portaria');
+    revalidatePath('/consulta');
 
     return NextResponse.json({ success: true, message: 'Retirada manual confirmada.' });
   } catch (err) {
