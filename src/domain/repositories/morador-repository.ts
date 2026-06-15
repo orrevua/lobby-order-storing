@@ -7,6 +7,7 @@ export type CreateResidentInput = {
   cpf: string | null;
   signatureUrl: string | null;
   apartamentoId: number;
+  createdBy: string | null;
 };
 
 export type UpdateResidentInput = {
@@ -19,6 +20,7 @@ export type UpdateResidentInput = {
 
 export interface MoradorRepository {
   list(): Promise<(Morador & { apartamento: Apartamento | null })[]>;
+  listByUser(userId: string): Promise<(Morador & { apartamento: Apartamento | null })[]>;
   listByApartment(apartamentoId: number): Promise<Morador[]>;
   findById(id: number): Promise<Morador | null>;
   create(data: CreateResidentInput): Promise<Morador>;

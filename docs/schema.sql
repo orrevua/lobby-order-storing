@@ -87,5 +87,8 @@ ALTER TABLE withdrawal_sessions ADD COLUMN cpf_confirmacao VARCHAR(11);
 ALTER TABLE withdrawal_sessions ADD COLUMN signature_url TEXT;
 ALTER TABLE moradores ADD COLUMN signature_url TEXT;
 
+-- 6. Track which user created each resident
+ALTER TABLE moradores ADD COLUMN created_by UUID;
+
 -- NOTE: Create a private storage bucket named 'signatures' in Supabase Dashboard > Storage.
 -- No public access. All uploads/reads go through API routes using the service role client.

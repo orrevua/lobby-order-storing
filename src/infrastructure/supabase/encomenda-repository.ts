@@ -42,6 +42,7 @@ function mapJoined(row: any): EncomendaComMorador {
       cpf: row.morador.cpf ?? null,
       signatureUrl: row.morador.signature_url ?? null,
       apartamentoId: row.morador.apartamento_id,
+      createdBy: row.morador.created_by ?? null,
       createdAt: row.morador.created_at,
       apartamento: row.morador.apartamento
         ? {

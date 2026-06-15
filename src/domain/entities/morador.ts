@@ -5,5 +5,6 @@ export type Morador = {
   cpf: string | null;
   signatureUrl: string | null;
   apartamentoId: number | null;
+  createdBy: string | null;
   createdAt: string;
 };

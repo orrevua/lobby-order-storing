@@ -6,6 +6,7 @@ import { createResident as createResidentUC } from '@/application/use-cases/mora
 import { updateResident as updateResidentUC } from '@/application/use-cases/moradores/update-resident';
 import { deleteResident as deleteResidentUC } from '@/application/use-cases/moradores/delete-resident';
 import { cleanCPF } from '@/domain/validators/cpf';
+import { getServerUser } from '@/infrastructure/supabase/server';
 import type { ActionResult } from '@/lib/types';
 import type { Morador } from '@/domain/entities';
 
@@ -25,7 +26,8 @@ export async function createResident(formData: FormData): Promise<ActionResult<M
   const apartamentoId = Number(formData.get('apartamento_id'));
 
   try {
-    let morador = await createResidentUC(residentRepository, { nome, contato, cpf, signatureUrl: null, apartamentoId });
+    const user = await getServerUser();
+    let morador = await createResidentUC(residentRepository, { nome, contato, cpf, signatureUrl: null, apartamentoId, createdBy: user?.id ?? null });
 
     const sig = await extractSignatureFile(formData);
     if (sig) {

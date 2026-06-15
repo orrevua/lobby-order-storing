@@ -3,9 +3,10 @@ import { deleteApartment } from "@/lib/actions/apartments";
 
 type ApartamentoListProps = {
   apartamentos: Apartamento[];
+  canDelete: boolean;
 };
 
-export function ApartamentoList({ apartamentos }: ApartamentoListProps) {
+export function ApartamentoList({ apartamentos, canDelete }: ApartamentoListProps) {
   if (apartamentos.length === 0) {
     return (
       <p className="py-8 text-center text-sm text-text-tertiary">
@@ -25,9 +26,11 @@ export function ApartamentoList({ apartamentos }: ApartamentoListProps) {
             <th className="px-4 py-3 text-left font-medium text-text-secondary">
               Número
             </th>
-            <th className="px-4 py-3 text-right font-medium text-text-secondary">
-              Ações
-            </th>
+            {canDelete && (
+              <th className="px-4 py-3 text-right font-medium text-text-secondary">
+                Ações
+              </th>
+            )}
           </tr>
         </thead>
         <tbody className="divide-y divide-bg-tertiary">
@@ -41,16 +44,18 @@ export function ApartamentoList({ apartamentos }: ApartamentoListProps) {
               <tr key={apt.id} className="hover:bg-bg-secondary">
                 <td className="px-4 py-3 text-text-primary">{apt.bloco}</td>
                 <td className="px-4 py-3 text-text-primary">{apt.numero}</td>
-                <td className="px-4 py-3 text-right">
-                  <form action={handleExcluir} className="inline">
-                    <button
-                      type="submit"
-                      className="rounded px-2 py-1 text-xs font-medium text-error hover:bg-error/10"
-                    >
-                      Excluir
-                    </button>
-                  </form>
-                </td>
+                {canDelete && (
+                  <td className="px-4 py-3 text-right">
+                    <form action={handleExcluir} className="inline">
+                      <button
+                        type="submit"
+                        className="rounded px-2 py-1 text-xs font-medium text-error hover:bg-error/10"
+                      >
+                        Excluir
+                      </button>
+                    </form>
+                  </td>
+                )}
               </tr>
             );
           })}

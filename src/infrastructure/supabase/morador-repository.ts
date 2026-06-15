@@ -14,6 +14,7 @@ type MoradorRow = {
   cpf: string | null;
   signature_url: string | null;
   apartamento_id: number | null;
+  created_by: string | null;
   created_at: string;
 };
 
@@ -32,6 +33,7 @@ function toDomain(row: MoradorRow): Morador {
     cpf: row.cpf,
     signatureUrl: row.signature_url,
     apartamentoId: row.apartamento_id,
+    createdBy: row.created_by,
     createdAt: row.created_at,
   };
 }
@@ -52,6 +54,21 @@ export class SupabaseMoradorRepository implements MoradorRepository {
     const { data, error } = await this.client
       .from('moradores')
       .select('*, apartamento:apartamentos(*)')
+      .order('nome', { ascending: true });
+
+    if (error) throw new Error(error.message);
+
+    return (data ?? []).map((row: any) => ({
+      ...toDomain(row),
+      apartamento: row.apartamento ? aptToDomain(row.apartamento) : null,
+    }));
+  }
+
+  async listByUser(userId: string): Promise<(Morador & { apartamento: Apartamento | null })[]> {
+    const { data, error } = await this.client
+      .from('moradores')
+      .select('*, apartamento:apartamentos(*)')
+      .eq('created_by', userId)
       .order('nome', { ascending: true });
 
     if (error) throw new Error(error.message);
@@ -96,6 +113,7 @@ export class SupabaseMoradorRepository implements MoradorRepository {
         cpf: input.cpf,
         signature_url: input.signatureUrl,
         apartamento_id: input.apartamentoId,
+        created_by: input.createdBy,
       })
       .select()
       .single();
