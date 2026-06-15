@@ -25,12 +25,12 @@ export async function createResident(formData: FormData): Promise<ActionResult<M
   const apartamentoId = Number(formData.get('apartamento_id'));
 
   try {
-    const morador = await createResidentUC(residentRepository, { nome, contato, cpf, signatureUrl: null, apartamentoId });
+    let morador = await createResidentUC(residentRepository, { nome, contato, cpf, signatureUrl: null, apartamentoId });
 
     const sig = await extractSignatureFile(formData);
     if (sig) {
       const path = await storageService.uploadMoradorSignature(morador.id, sig.buffer, sig.contentType);
-      await updateResidentUC(residentRepository, morador.id, { nome, contato, cpf, signatureUrl: path, apartamentoId });
+      morador = await updateResidentUC(residentRepository, morador.id, { nome, contato, cpf, signatureUrl: path, apartamentoId });
     }
 
     revalidatePath('/cadastro/moradores');

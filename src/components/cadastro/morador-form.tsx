@@ -19,25 +19,36 @@ export function MoradorForm({ apartamentos, morador, onClose }: Props) {
   const [existingSignatureUrl, setExistingSignatureUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (morador?.signatureUrl) {
+    let isMounted = true;
+    if (morador?.id && morador?.signatureUrl) {
       fetch(`/api/moradores/${morador.id}/assinatura`)
-        .then((r) => r.json())
-        .then((d) => { if (d.signedUrl) setExistingSignatureUrl(d.signedUrl); })
-        .catch(() => {});
+        .then((r) => (r.ok ? r.json() : Promise.reject("Erro ao buscar assinatura")))
+        .then((d) => {
+          if (isMounted && d.signedUrl) setExistingSignatureUrl(d.signedUrl);
+        })
+        .catch((err) => console.error("Erro ao carregar assinatura:", err));
     }
+    return () => {
+      isMounted = false;
+    };
   }, [morador?.id, morador?.signatureUrl]);
 
   async function handleSubmit(formData: FormData) {
     setError(null);
     startTransition(async () => {
-      const result = morador
-        ? await updateResident(morador.id, formData)
-        : await createResident(formData);
+      try {
+        const result = morador
+          ? await updateResident(morador.id, formData)
+          : await createResident(formData);
 
-      if (!result.success) {
-        setError(result.error);
-      } else if (onClose) {
-        onClose();
+        if (!result.success) {
+          setError(result.error);
+        } else if (onClose) {
+          onClose();
+        }
+      } catch (err) {
+        console.error("Erro no formulário de morador:", err);
+        setError("Ocorreu um erro de rede ao salvar o morador. Verifique sua conexão e o tamanho da imagem.");
       }
     });
   }
