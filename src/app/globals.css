@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #FAF6F1;
+  --bg-secondary: #F0EAE2;
+  --bg-tertiary: #E5DDD3;
+  --border: #D1C4B4;
+  --text-primary: #2D2013;
+  --text-secondary: #6B5744;
+  --text-tertiary: #8B7A68;
+  --accent: #C2410C;
+  --accent-hover: #9A3412;
+  --accent-muted: #C2410C18;
+  --success: #16A34A;
+  --warning: #CA8A04;
+  --error: #DC2626;
+}
+
+@theme inline {
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-border: var(--border);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-muted: var(--accent-muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --font-sans: var(--font-inter);
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+button,
+select,
+input[type="checkbox"],
+a,
+label[for],
+[role="button"] {
+  cursor: pointer;
+}
