@@ -1,12 +1,18 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const PUBLIC_PATHS = ['/login', '/signup', '/retirada']
+
+const ROLE_ALLOWED_PATHS: Record<string, string[]> = {
+  morador: ['/cadastro/moradores', '/cadastro/apartamentos'],
+}
+
+function isPathAllowed(path: string, allowedPaths: string[]) {
+  return allowedPaths.some(p => path === p || path.startsWith(p + '/'))
+}
+
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
+  let response = NextResponse.next({ request: { headers: request.headers } })
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,64 +23,35 @@ export async function middleware(request: NextRequest) {
           return request.cookies.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          })
+          request.cookies.set({ name, value, ...options })
+          response = NextResponse.next({ request: { headers: request.headers } })
+          response.cookies.set({ name, value, ...options })
         },
         remove(name: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
+          request.cookies.set({ name, value: '', ...options })
+          response = NextResponse.next({ request: { headers: request.headers } })
+          response.cookies.set({ name, value: '', ...options })
         },
       },
     }
   )
 
+  const path = request.nextUrl.pathname
+  const isPublic = PUBLIC_PATHS.some(p => path.startsWith(p))
+
+  if (isPublic) return response
+
   const { data: { user } } = await supabase.auth.getUser()
 
-  const publicPaths = ['/login', '/signup', '/retirada']
-  const isPublicPath = publicPaths.some(p => request.nextUrl.pathname.startsWith(p))
-
-  if (!user && !isPublicPath) {
+  if (!user) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  if (user && !isPublicPath) {
-    const role = user.app_metadata.role || 'morador'
-    const path = request.nextUrl.pathname
+  const role = user.app_metadata.role || 'morador'
+  const restrictedPaths = ROLE_ALLOWED_PATHS[role]
 
-    if (role === 'morador') {
-      const allowedPaths = ['/cadastro/moradores', '/cadastro/apartamentos']
-      const isAllowed = allowedPaths.some(p => path === p || path.startsWith(p))
-
-      if (!isAllowed && path !== '/') {
-         return NextResponse.redirect(new URL('/cadastro/moradores', request.url))
-      }
-    }
+  if (restrictedPaths && path !== '/' && !isPathAllowed(path, restrictedPaths)) {
+    return NextResponse.redirect(new URL(restrictedPaths[0], request.url))
   }
 
   return response
