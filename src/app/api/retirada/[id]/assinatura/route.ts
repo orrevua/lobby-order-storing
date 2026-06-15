@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storageService } from '@/infrastructure/supabase/repositories';
+import { storageService, withdrawalSessionRepository } from '@/infrastructure/supabase/repositories';
 
 const MAX_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -38,10 +38,16 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const signedUrl = await storageService.getSignatureUrl(id);
+  
+  const session = await withdrawalSessionRepository.findById(id);
+  if (!session || !session.signatureUrl) {
+    return NextResponse.json({ error: 'Assinatura não encontrada.' }, { status: 404 });
+  }
+
+  const signedUrl = await storageService.createSignedUrl(session.signatureUrl);
 
   if (!signedUrl) {
-    return NextResponse.json({ error: 'Assinatura não encontrada.' }, { status: 404 });
+    return NextResponse.json({ error: 'Erro ao gerar URL da assinatura.' }, { status: 500 });
   }
 
   return NextResponse.redirect(signedUrl);
