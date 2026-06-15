@@ -40,21 +40,18 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-bg-primary p-4">
-        <div className="w-full max-w-md rounded-xl border border-border bg-bg-secondary p-8 shadow-sm text-center">
-          <h1 className="mb-4 text-2xl font-bold text-success">Cadastro Realizado!</h1>
-          <p className="mb-6 text-text-secondary">Verifique seu e-mail para confirmar a conta antes de entrar.</p>
-          <Link href="/login" className="text-accent hover:underline text-sm font-medium">
-            Voltar para o Login
-          </Link>
-        </div>
+      <div className="w-full max-w-md rounded-xl border border-border bg-bg-secondary p-8 shadow-sm text-center">
+        <h1 className="mb-4 text-2xl font-bold text-success">Cadastro Realizado!</h1>
+        <p className="mb-6 text-text-secondary">Verifique seu e-mail para confirmar a conta antes de entrar.</p>
+        <Link href="/login" className="text-accent hover:underline text-sm font-medium">
+          Voltar para o Login
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg-primary p-4">
-      <div className="w-full max-w-md rounded-xl border border-border bg-bg-secondary p-8 shadow-sm">
+    <div className="w-full max-w-md rounded-xl border border-border bg-bg-secondary p-8 shadow-sm">
         <h1 className="mb-6 text-2xl font-bold text-text-primary">Criar Conta</h1>
         
         {error && (
@@ -103,11 +100,10 @@ export default function SignupPage() {
             {loading ? 'Cadastrando...' : 'Cadastrar'}
           </button>
         </form>
-        <div className="mt-6 text-center">
-          <Link href="/login" className="text-sm text-text-tertiary hover:text-accent">
-            Já tem uma conta? Entre aqui
-          </Link>
-        </div>
+      <div className="mt-6 text-center">
+        <Link href="/login" className="text-sm text-text-tertiary hover:text-accent">
+          Já tem uma conta? Entre aqui
+        </Link>
       </div>
     </div>
   );

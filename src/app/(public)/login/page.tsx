@@ -31,8 +31,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg-primary p-4">
-      <div className="w-full max-w-md rounded-xl border border-border bg-bg-secondary p-8 shadow-sm">
+    <div className="w-full max-w-md rounded-xl border border-border bg-bg-secondary p-8 shadow-sm">
         <h1 className="mb-6 text-2xl font-bold text-text-primary">Lobby Order Login</h1>
         
         {error && (
@@ -70,7 +69,6 @@ export default function LoginPage() {
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
-      </div>
     </div>
   );
 }
