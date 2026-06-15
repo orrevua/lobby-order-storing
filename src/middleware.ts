@@ -56,18 +56,21 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/signup') && !request.nextUrl.pathname.startsWith('/retirada')) {
+  const publicPaths = ['/login', '/signup', '/retirada']
+  const isPublicPath = publicPaths.some(p => request.nextUrl.pathname.startsWith(p))
+
+  if (!user && !isPublicPath) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  if (user) {
+  if (user && !isPublicPath) {
     const role = user.app_metadata.role || 'morador'
     const path = request.nextUrl.pathname
 
     if (role === 'morador') {
-      const allowedPaths = ['/cadastro/moradores', '/cadastro/apartamentos', '/login']
+      const allowedPaths = ['/cadastro/moradores', '/cadastro/apartamentos']
       const isAllowed = allowedPaths.some(p => path === p || path.startsWith(p))
-      
+
       if (!isAllowed && path !== '/') {
          return NextResponse.redirect(new URL('/cadastro/moradores', request.url))
       }
