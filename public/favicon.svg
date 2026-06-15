@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- 3D open box facing diagonal -->
+  <!-- Box front face -->
+  <path d="M6 15 L16 19 L16 30 L6 26 Z" fill="#C2410C" opacity="0.25" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Box right face -->
+  <path d="M16 19 L28 14 L28 25 L16 30 Z" fill="#C2410C" opacity="0.12" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Box inside top -->
+  <path d="M6 15 L16 10 L28 14 L16 19 Z" fill="#C2410C" opacity="0.06" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Left flap open -->
+  <path d="M6 15 L16 10 L12 3 L2 8 Z" fill="#C2410C" opacity="0.18" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Right flap open -->
+  <path d="M16 10 L28 14 L30 6 L18 2 Z" fill="#C2410C" opacity="0.1" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" fill="none">
+  <!-- 3D open box facing diagonal -->
+  <g transform="translate(2, 2)">
+    <!-- Box front face -->
+    <path d="M8 18 L18 22 L18 36 L8 32 Z" fill="#C2410C" opacity="0.2" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Box right face -->
+    <path d="M18 22 L32 17 L32 31 L18 36 Z" fill="#C2410C" opacity="0.1" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Box bottom visible inside -->
+    <path d="M8 18 L18 13 L32 17 L18 22 Z" fill="#C2410C" opacity="0.06" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Left flap (open, tilted back) -->
+    <path d="M8 18 L18 13 L14 5 L4 10 Z" fill="#C2410C" opacity="0.15" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Right flap (open, tilted back) -->
+    <path d="M18 13 L32 17 L34 8 L20 4 Z" fill="#C2410C" opacity="0.08" stroke="#C2410C" stroke-width="1.5" stroke-linejoin="round"/>
+  </g>
+  <!-- "Lobby" text -->
+  <text x="42" y="29" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600" fill="#2D2013">Lobby</text>
+  <!-- "Easy" text -->
+  <text x="107" y="29" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700" fill="#C2410C">Easy</text>
+</svg>
