@@ -1,10 +1,10 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const PUBLIC_PATHS = ['/login', '/signup', '/retirada']
+const PUBLIC_PATHS = ['/login', '/signup']
 
 const ROLE_ALLOWED_PATHS: Record<string, string[]> = {
-  morador: ['/cadastro/moradores', '/encomendas'],
+  morador: ['/cadastro/moradores', '/encomendas', '/retirada'],
 }
 
 function isPathAllowed(path: string, allowedPaths: string[]) {
@@ -55,7 +55,7 @@ export async function middleware(request: NextRequest) {
   const role = user.app_metadata.role || 'morador'
   const restrictedPaths = ROLE_ALLOWED_PATHS[role]
 
-  if (restrictedPaths && path !== '/' && !isPathAllowed(path, restrictedPaths)) {
+  if (restrictedPaths && path !== '/' && !path.startsWith('/api/') && !isPathAllowed(path, restrictedPaths)) {
     return NextResponse.redirect(new URL(restrictedPaths[0], request.url))
   }
 

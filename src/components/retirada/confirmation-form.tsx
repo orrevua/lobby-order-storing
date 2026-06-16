@@ -12,6 +12,7 @@ type PackageItem = {
 
 type Props = {
   sessionId: string;
+  moradorNome: string;
   prefillCpf: string | null;
   signatureImageUrl: string | null;
   moradorSignaturePath: string | null;
@@ -20,7 +21,7 @@ type Props = {
 
 type Step = 'packages' | 'confirm' | 'submitting' | 'success' | 'error';
 
-export function ConfirmationForm({ sessionId, prefillCpf, signatureImageUrl, moradorSignaturePath, encomendas }: Props) {
+export function ConfirmationForm({ sessionId, moradorNome, prefillCpf, signatureImageUrl, moradorSignaturePath, encomendas }: Props) {
   const [step, setStep] = useState<Step>('packages');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -90,9 +91,14 @@ export function ConfirmationForm({ sessionId, prefillCpf, signatureImageUrl, mor
       {step === 'confirm' && (
         <>
           <h1 className="text-lg font-semibold text-text-primary">Confirme seus dados</h1>
-          <p className="mt-1 text-sm text-text-tertiary">Verifique seu CPF e assinatura antes de confirmar</p>
+          <p className="mt-1 text-sm text-text-tertiary">Verifique suas informações antes de confirmar</p>
 
           <div className="mt-4 space-y-4">
+            <div className="rounded-lg border border-border bg-bg-primary px-4 py-3">
+              <p className="text-xs font-medium text-text-tertiary">Nome</p>
+              <p className="mt-1 text-base text-text-primary">{moradorNome}</p>
+            </div>
+
             <div className="rounded-lg border border-border bg-bg-primary px-4 py-3">
               <p className="text-xs font-medium text-text-tertiary">CPF</p>
               <p className="mt-1 text-lg tracking-wider text-text-primary">

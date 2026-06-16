@@ -1,5 +1,7 @@
 import { findWithdrawalSession } from '@/application/use-cases/retirada/find-withdrawal-session';
-import { apartmentRepository, packageRepository, withdrawalSessionRepository, storageService } from '@/infrastructure/supabase/repositories';
+import { apartmentRepository, packageRepository, residentRepository, withdrawalSessionRepository, storageService } from '@/infrastructure/supabase/repositories';
+import { getServerUserWithCondo } from '@/infrastructure/supabase/server';
+import { redirect } from 'next/navigation';
 import { ConfirmationForm } from '@/components/retirada/confirmation-form';
 
 export default async function RetiradaPage({
@@ -7,6 +9,9 @@ export default async function RetiradaPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const ctx = await getServerUserWithCondo();
+  if (!ctx) redirect('/login');
+
   const { id } = await params;
   const result = await findWithdrawalSession(apartmentRepository, withdrawalSessionRepository, packageRepository, id);
 
@@ -46,19 +51,30 @@ export default async function RetiradaPage({
     );
   }
 
-  const morador = result.encomendas[0]?.morador;
-  const prefillCpf = morador?.cpf ?? null;
-  const moradorSignaturePath = morador?.signatureUrl ?? null;
-  const signatureImageUrl = moradorSignaturePath
-    ? await storageService.createSignedUrl(moradorSignaturePath)
+  const myResidents = await residentRepository.listByUser(ctx.userId);
+  const myResidentIds = new Set(myResidents.map((r) => r.id));
+  const matchingMorador = result.encomendas.find((e) => myResidentIds.has(e.moradorId))?.morador;
+
+  if (!matchingMorador) {
+    return (
+      <div className="rounded-xl border border-border bg-bg-secondary p-6 text-center">
+        <p className="text-lg font-medium text-text-primary">Acesso negado</p>
+        <p className="mt-2 text-sm text-text-tertiary">Estas encomendas não pertencem aos seus moradores cadastrados.</p>
+      </div>
+    );
+  }
+
+  const signatureImageUrl = matchingMorador.signatureUrl
+    ? await storageService.createSignedUrl(matchingMorador.signatureUrl)
     : null;
 
   return (
     <ConfirmationForm
       sessionId={id}
-      prefillCpf={prefillCpf}
+      moradorNome={matchingMorador.nome}
+      prefillCpf={matchingMorador.cpf}
       signatureImageUrl={signatureImageUrl}
-      moradorSignaturePath={moradorSignaturePath}
+      moradorSignaturePath={matchingMorador.signatureUrl}
       encomendas={result.encomendas.map((e) => ({
         id: e.id,
         descricao: e.descricao,
