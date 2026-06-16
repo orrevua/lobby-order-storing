@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabaseClient } from "@/infrastructure/supabase/client";
 
 type NavItem = {
@@ -37,7 +37,7 @@ const MORADOR_NAV: NavItem[] = [
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({ role }: { role: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -45,13 +45,6 @@ export function Sidebar() {
     pathname.startsWith("/cadastro"),
   );
   const [loggingOut, setLoggingOut] = useState(false);
-  const [role, setRole] = useState<string | null>(null);
-
-  useEffect(() => {
-    supabaseClient.auth.getUser().then(({ data: { user } }) => {
-      setRole(user?.app_metadata.role || "morador");
-    });
-  }, []);
 
   const navItems = role === "morador" ? MORADOR_NAV : ALL_NAV;
 
