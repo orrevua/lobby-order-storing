@@ -71,8 +71,9 @@ export function EntryForm({ apartamentos }: Props) {
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-secondary">Bloco *</label>
+          <label htmlFor="entry-bloco" className="mb-1 block text-sm font-medium text-text-secondary">Bloco *</label>
           <select
+            id="entry-bloco"
             value={selectedBloco}
             onChange={(e) => handleBlocoChange(e.target.value)}
             required
@@ -86,8 +87,9 @@ export function EntryForm({ apartamentos }: Props) {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-secondary">Apartamento *</label>
+          <label htmlFor="entry-apt" className="mb-1 block text-sm font-medium text-text-secondary">Apartamento *</label>
           <select
+            id="entry-apt"
             value={selectedAptId}
             onChange={(e) => handleAptChange(e.target.value)}
             required
@@ -102,8 +104,9 @@ export function EntryForm({ apartamentos }: Props) {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-secondary">Morador *</label>
+          <label htmlFor="entry-morador" className="mb-1 block text-sm font-medium text-text-secondary">Morador *</label>
           <select
+            id="entry-morador"
             name="morador_id"
             required
             disabled={moradores.length === 0}
@@ -117,8 +120,9 @@ export function EntryForm({ apartamentos }: Props) {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-secondary">Código de Rastreio</label>
+          <label htmlFor="entry-rastreio" className="mb-1 block text-sm font-medium text-text-secondary">Código de Rastreio</label>
           <input
+            id="entry-rastreio"
             type="text"
             name="codigo_rastreio"
             className="w-full rounded-md border border-border bg-bg-primary px-3 py-2 text-sm text-text-primary focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
@@ -126,8 +130,9 @@ export function EntryForm({ apartamentos }: Props) {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-secondary">Descrição</label>
+          <label htmlFor="entry-descricao" className="mb-1 block text-sm font-medium text-text-secondary">Descrição</label>
           <input
+            id="entry-descricao"
             type="text"
             name="descricao"
             placeholder="Ex: Caixa grande, Envelope..."
@@ -136,8 +141,9 @@ export function EntryForm({ apartamentos }: Props) {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-secondary">Porteiro *</label>
+          <label htmlFor="entry-porteiro" className="mb-1 block text-sm font-medium text-text-secondary">Porteiro *</label>
           <input
+            id="entry-porteiro"
             type="text"
             name="received_by"
             required

@@ -51,8 +51,9 @@ export default function SignupPage() {
 
       <form onSubmit={handleSignup} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-text-secondary">Email</label>
+          <label htmlFor="signup-email" className="block text-sm font-medium text-text-secondary">Email</label>
           <input
+            id="signup-email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -61,8 +62,9 @@ export default function SignupPage() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-text-secondary">Senha</label>
+          <label htmlFor="signup-password" className="block text-sm font-medium text-text-secondary">Senha</label>
           <input
+            id="signup-password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -71,8 +73,9 @@ export default function SignupPage() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-text-secondary">Tipo de Usuário</label>
+          <label htmlFor="signup-role" className="block text-sm font-medium text-text-secondary">Tipo de Usuário</label>
           <select
+            id="signup-role"
             value={role}
             onChange={(e) => setRole(e.target.value as 'porteiro' | 'morador')}
             className="mt-1 w-full rounded-md border border-border bg-bg-primary px-3 py-2 text-sm text-text-primary focus:border-accent focus:outline-none"

@@ -62,8 +62,9 @@ export function ManualConfirmationForm({ sessionId, onClose }: Props) {
         <h2 className="text-sm font-semibold text-text-primary">Confirmação Manual</h2>
         <form onSubmit={handleSubmit} className="mt-4 space-y-3">
           <div>
-            <label className="mb-1 block text-xs font-medium text-text-secondary">Identificação do Porteiro *</label>
+            <label htmlFor="manual-porteiro" className="mb-1 block text-xs font-medium text-text-secondary">Identificação do Porteiro *</label>
             <input
+              id="manual-porteiro"
               type="text"
               value={confirmedBy}
               onChange={(e) => setConfirmedBy(e.target.value)}
@@ -72,8 +73,9 @@ export function ManualConfirmationForm({ sessionId, onClose }: Props) {
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-text-secondary">Motivo *</label>
+            <label htmlFor="manual-motivo" className="mb-1 block text-xs font-medium text-text-secondary">Motivo *</label>
             <select
+              id="manual-motivo"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               required
@@ -86,8 +88,9 @@ export function ManualConfirmationForm({ sessionId, onClose }: Props) {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-text-secondary">CPF do Morador</label>
+            <label htmlFor="manual-cpf" className="mb-1 block text-xs font-medium text-text-secondary">CPF do Morador</label>
             <input
+              id="manual-cpf"
               type="text"
               value={cpf}
               onChange={(e) => {
@@ -104,8 +107,9 @@ export function ManualConfirmationForm({ sessionId, onClose }: Props) {
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-text-secondary">Observação</label>
+            <label htmlFor="manual-obs" className="mb-1 block text-xs font-medium text-text-secondary">Observação</label>
             <textarea
+              id="manual-obs"
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={2}

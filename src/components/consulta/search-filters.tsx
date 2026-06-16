@@ -34,8 +34,9 @@ function ApartamentoCombobox({
 
   return (
     <div ref={ref} className="relative">
-      <label className="mb-1 block text-sm font-medium text-text-secondary">Apartamento</label>
+      <label htmlFor="filter-apt" className="mb-1 block text-sm font-medium text-text-secondary">Apartamento</label>
       <input
+        id="filter-apt"
         type="text"
         placeholder="Todos"
         value={open ? search : label}
@@ -127,8 +128,9 @@ export function SearchFilters({ apartamentos }: Props) {
       <h3 className="mb-3 text-sm font-semibold text-text-primary">Filtros de Busca</h3>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-secondary">Data Início</label>
+          <label htmlFor="filter-data-inicio" className="mb-1 block text-sm font-medium text-text-secondary">Data Início</label>
           <input
+            id="filter-data-inicio"
             type="date"
             value={dataInicio}
             onChange={(e) => setDataInicio(e.target.value)}
@@ -136,8 +138,9 @@ export function SearchFilters({ apartamentos }: Props) {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-secondary">Data Fim</label>
+          <label htmlFor="filter-data-fim" className="mb-1 block text-sm font-medium text-text-secondary">Data Fim</label>
           <input
+            id="filter-data-fim"
             type="date"
             value={dataFim}
             onChange={(e) => setDataFim(e.target.value)}
@@ -150,8 +153,9 @@ export function SearchFilters({ apartamentos }: Props) {
           onChange={setApartamentoId}
         />
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-secondary">Nome do Morador</label>
+          <label htmlFor="filter-morador" className="mb-1 block text-sm font-medium text-text-secondary">Nome do Morador</label>
           <input
+            id="filter-morador"
             type="text"
             value={nomeMorador}
             onChange={(e) => setNomeMorador(e.target.value)}
@@ -159,8 +163,9 @@ export function SearchFilters({ apartamentos }: Props) {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-secondary">Código de Rastreio</label>
+          <label htmlFor="filter-rastreio" className="mb-1 block text-sm font-medium text-text-secondary">Código de Rastreio</label>
           <input
+            id="filter-rastreio"
             type="text"
             value={codigoRastreio}
             onChange={(e) => setCodigoRastreio(e.target.value)}

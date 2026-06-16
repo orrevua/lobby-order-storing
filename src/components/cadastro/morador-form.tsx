@@ -133,7 +133,7 @@ export function MoradorForm({ apartamentos, morador, onClose }: Props) {
       </div>
 
       <div className="mt-3">
-        <label className="mb-1 block text-sm font-medium text-text-secondary">Assinatura</label>
+        <label htmlFor="morador-signature" className="mb-1 block text-sm font-medium text-text-secondary">Assinatura</label>
         <div className="block gap-4">
           {(signaturePreview || existingSignatureUrl) && (
             <img
@@ -144,6 +144,7 @@ export function MoradorForm({ apartamentos, morador, onClose }: Props) {
           )}
           <div className="flex flex-col gap-1">
             <input
+              id="morador-signature"
               type="file"
               name="signature"
               accept="image/*"
