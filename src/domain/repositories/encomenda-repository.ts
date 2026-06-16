@@ -9,8 +9,8 @@ export type RegisterPackageInput = {
 };
 
 export interface EncomendaRepository {
-  listPending(apartamentoId?: number): Promise<EncomendaComMorador[]>;
-  search(filters: SearchFilters): Promise<{ data: EncomendaComMorador[]; total: number }>;
+  listPending(condominioId: string, apartamentoId?: number): Promise<EncomendaComMorador[]>;
+  search(condominioId: string, filters: SearchFilters): Promise<{ data: EncomendaComMorador[]; total: number }>;
   register(data: RegisterPackageInput): Promise<Encomenda>;
   markWithdrawn(id: number): Promise<Encomenda>;
   markDelivered(ids: number[]): Promise<void>;

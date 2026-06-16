@@ -1,5 +1,5 @@
 import { findWithdrawalSession } from '@/application/use-cases/retirada/find-withdrawal-session';
-import { packageRepository, withdrawalSessionRepository, storageService } from '@/infrastructure/supabase/repositories';
+import { apartmentRepository, packageRepository, withdrawalSessionRepository, storageService } from '@/infrastructure/supabase/repositories';
 import { ConfirmationForm } from '@/components/retirada/confirmation-form';
 
 export default async function RetiradaPage({
@@ -8,7 +8,7 @@ export default async function RetiradaPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const result = await findWithdrawalSession(withdrawalSessionRepository, packageRepository, id);
+  const result = await findWithdrawalSession(apartmentRepository, withdrawalSessionRepository, packageRepository, id);
 
   if (result.status === 'not_found') {
     return (

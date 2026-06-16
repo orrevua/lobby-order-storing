@@ -1,3 +1,4 @@
+import type { ApartamentoRepository } from '@/domain/repositories/apartamento-repository';
 import type { EncomendaRepository } from '@/domain/repositories/encomenda-repository';
 import type { WithdrawalSessionRepository } from '@/domain/repositories/withdrawal-session-repository';
 
@@ -10,6 +11,7 @@ type Input = {
 const TTL_MINUTES = 5;
 
 export async function createWithdrawalSession(
+  apartamentoRepo: ApartamentoRepository,
   encomendaRepo: EncomendaRepository,
   sessionRepo: WithdrawalSessionRepository,
   input: Input,
@@ -18,7 +20,10 @@ export async function createWithdrawalSession(
     throw new Error('Nenhuma encomenda selecionada.');
   }
 
-  const pendentes = await encomendaRepo.listPending(input.apartamentoId);
+  const apartamento = await apartamentoRepo.findById(input.apartamentoId);
+  if (!apartamento) throw new Error('Apartamento não encontrado.');
+
+  const pendentes = await encomendaRepo.listPending(apartamento.condominioId, input.apartamentoId);
   const pendenteIds = new Set(pendentes.map((e) => e.id));
 
   for (const id of input.encomendaIds) {

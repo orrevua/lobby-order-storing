@@ -90,5 +90,35 @@ ALTER TABLE moradores ADD COLUMN signature_url TEXT;
 -- 6. Track which user created each resident
 ALTER TABLE moradores ADD COLUMN created_by UUID;
 
+-- 7. Multi-tenancy: Condominiums & Invites
+CREATE TABLE condominios (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(200) NOT NULL,
+    address TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+CREATE TABLE invite_tokens (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    condominio_id UUID NOT NULL REFERENCES condominios(id) ON DELETE CASCADE,
+    token VARCHAR(64) NOT NULL UNIQUE,
+    created_by UUID NOT NULL,
+    expires_at TIMESTAMP WITH TIME ZONE,
+    max_uses INT,
+    use_count INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+ALTER TABLE apartamentos ADD COLUMN condominio_id UUID REFERENCES condominios(id) ON DELETE CASCADE;
+ALTER TABLE moradores ADD COLUMN condominio_id UUID REFERENCES condominios(id) ON DELETE CASCADE;
+
+ALTER TABLE apartamentos DROP CONSTRAINT unique_ap_bloco;
+ALTER TABLE apartamentos ADD CONSTRAINT unique_condo_ap_bloco UNIQUE (condominio_id, numero, bloco);
+
+CREATE INDEX idx_apartamentos_condominio ON apartamentos(condominio_id);
+CREATE INDEX idx_moradores_condominio ON moradores(condominio_id);
+CREATE INDEX idx_invite_tokens_token ON invite_tokens(token);
+CREATE INDEX idx_invite_tokens_condominio ON invite_tokens(condominio_id);
+
 -- NOTE: Create a private storage bucket named 'signatures' in Supabase Dashboard > Storage.
 -- No public access. All uploads/reads go through API routes using the service role client.

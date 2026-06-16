@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createWithdrawalSession } from '@/application/use-cases/retirada/create-withdrawal-session';
-import { packageRepository, withdrawalSessionRepository } from '@/infrastructure/supabase/repositories';
+import { apartmentRepository, packageRepository, withdrawalSessionRepository } from '@/infrastructure/supabase/repositories';
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Dados inválidos.' }, { status: 400 });
     }
 
-    const session = await createWithdrawalSession(packageRepository, withdrawalSessionRepository, {
+    const session = await createWithdrawalSession(apartmentRepository, packageRepository, withdrawalSessionRepository, {
       apartamentoId,
       encomendaIds,
       createdBy: createdBy ?? null,

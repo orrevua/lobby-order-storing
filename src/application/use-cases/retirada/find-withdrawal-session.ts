@@ -1,3 +1,4 @@
+import type { ApartamentoRepository } from '@/domain/repositories/apartamento-repository';
 import type { EncomendaRepository } from '@/domain/repositories/encomenda-repository';
 import type { WithdrawalSessionRepository } from '@/domain/repositories/withdrawal-session-repository';
 import type { WithdrawalSession } from '@/domain/entities/withdrawal-session';
@@ -11,6 +12,7 @@ type Result =
   | { status: 'pending'; session: WithdrawalSession; encomendas: EncomendaComMorador[] };
 
 export async function findWithdrawalSession(
+  apartamentoRepo: ApartamentoRepository,
   sessionRepo: WithdrawalSessionRepository,
   encomendaRepo: EncomendaRepository,
   sessionId: string,
@@ -28,7 +30,10 @@ export async function findWithdrawalSession(
 
   if (session.status === 'expired') return { status: 'expired' };
 
-  const pendentes = await encomendaRepo.listPending(session.apartamentoId);
+  const apartamento = await apartamentoRepo.findById(session.apartamentoId);
+  if (!apartamento) return { status: 'not_found' };
+
+  const pendentes = await encomendaRepo.listPending(apartamento.condominioId, session.apartamentoId);
   const encomendas = pendentes.filter((e) => session.encomendaIds.includes(e.id));
 
   return { status: 'pending', session, encomendas };

@@ -9,6 +9,7 @@ import type {
 
 type MoradorRow = {
   id: number;
+  condominio_id: string;
   nome: string;
   contato: string | null;
   cpf: string | null;
@@ -20,6 +21,7 @@ type MoradorRow = {
 
 type ApartamentoRow = {
   id: number;
+  condominio_id: string;
   numero: string;
   bloco: string;
   created_at: string;
@@ -28,6 +30,7 @@ type ApartamentoRow = {
 function toDomain(row: MoradorRow): Morador {
   return {
     id: row.id,
+    condominioId: row.condominio_id,
     nome: row.nome,
     contato: row.contato,
     cpf: row.cpf,
@@ -41,6 +44,7 @@ function toDomain(row: MoradorRow): Morador {
 function aptToDomain(row: ApartamentoRow): Apartamento {
   return {
     id: row.id,
+    condominioId: row.condominio_id,
     numero: row.numero,
     bloco: row.bloco,
     createdAt: row.created_at,
@@ -50,10 +54,11 @@ function aptToDomain(row: ApartamentoRow): Apartamento {
 export class SupabaseMoradorRepository implements MoradorRepository {
   constructor(private client: SupabaseClient) {}
 
-  async list(): Promise<(Morador & { apartamento: Apartamento | null })[]> {
+  async list(condominioId: string): Promise<(Morador & { apartamento: Apartamento | null })[]> {
     const { data, error } = await this.client
       .from('moradores')
       .select('*, apartamento:apartamentos(*)')
+      .eq('condominio_id', condominioId)
       .order('nome', { ascending: true });
 
     if (error) throw new Error(error.message);
@@ -108,6 +113,7 @@ export class SupabaseMoradorRepository implements MoradorRepository {
     const { data, error } = await this.client
       .from('moradores')
       .insert({
+        condominio_id: input.condominioId,
         nome: input.nome,
         contato: input.contato,
         cpf: input.cpf,

@@ -21,3 +21,21 @@ export async function getServerUser() {
   const { data: { user } } = await supabase.auth.getUser();
   return user;
 }
+
+export type UserContext = {
+  userId: string;
+  role: string;
+  condominioId: string;
+};
+
+export async function getServerUserWithCondo(): Promise<UserContext | null> {
+  const user = await getServerUser();
+  if (!user) return null;
+
+  const role = user.app_metadata.role || 'morador';
+  const condominioId = user.app_metadata.condominio_id;
+
+  if (!condominioId) return null;
+
+  return { userId: user.id, role, condominioId };
+}

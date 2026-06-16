@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { findWithdrawalSession } from '@/application/use-cases/retirada/find-withdrawal-session';
-import { packageRepository, withdrawalSessionRepository } from '@/infrastructure/supabase/repositories';
+import { apartmentRepository, packageRepository, withdrawalSessionRepository } from '@/infrastructure/supabase/repositories';
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const result = await findWithdrawalSession(withdrawalSessionRepository, packageRepository, id);
+  const result = await findWithdrawalSession(apartmentRepository, withdrawalSessionRepository, packageRepository, id);
 
   const messages: Record<string, string> = {
     not_found: 'Sessão não encontrada.',

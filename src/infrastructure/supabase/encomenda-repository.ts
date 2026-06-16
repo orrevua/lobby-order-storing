@@ -42,11 +42,13 @@ function mapJoined(row: any): EncomendaComMorador {
       cpf: row.morador.cpf ?? null,
       signatureUrl: row.morador.signature_url ?? null,
       apartamentoId: row.morador.apartamento_id,
+      condominioId: row.morador.condominio_id ?? '',
       createdBy: row.morador.created_by ?? null,
       createdAt: row.morador.created_at,
       apartamento: row.morador.apartamento
         ? {
             id: row.morador.apartamento.id,
+            condominioId: row.morador.apartamento.condominio_id ?? '',
             numero: row.morador.apartamento.numero,
             bloco: row.morador.apartamento.bloco,
             createdAt: row.morador.apartamento.created_at,
@@ -61,23 +63,20 @@ const JOINED_SELECT = '*, morador:moradores(*, apartamento:apartamentos(*))';
 export class SupabaseEncomendaRepository implements EncomendaRepository {
   constructor(private client: SupabaseClient) {}
 
-  async listPending(apartamentoId?: number): Promise<EncomendaComMorador[]> {
+  async listPending(condominioId: string, apartamentoId?: number): Promise<EncomendaComMorador[]> {
     let query = this.client
       .from('encomendas')
       .select(JOINED_SELECT)
       .eq('status', 'pendente')
       .order('data_chegada', { ascending: false });
 
-    if (apartamentoId) {
-      query = query.eq('morador.apartamento_id', apartamentoId);
-    }
-
     const { data, error } = await query;
     if (error) throw new Error(error.message);
 
     let results = (data ?? []).map(mapJoined);
 
-    // Filter out results where morador is null (can happen with nested filter)
+    results = results.filter((e) => e.morador.condominioId === condominioId);
+
     if (apartamentoId) {
       results = results.filter(
         (e) => e.morador.apartamento?.id === apartamentoId,
@@ -88,6 +87,7 @@ export class SupabaseEncomendaRepository implements EncomendaRepository {
   }
 
   async search(
+    condominioId: string,
     filters: SearchFilters,
   ): Promise<{ data: EncomendaComMorador[]; total: number }> {
     const page = filters.page ?? 1;
@@ -119,7 +119,8 @@ export class SupabaseEncomendaRepository implements EncomendaRepository {
 
     let results = (data ?? []).map(mapJoined);
 
-    // Filter by morador name client-side (Supabase can't ilike on nested relations easily)
+    results = results.filter((e) => e.morador.condominioId === condominioId);
+
     if (filters.nomeMorador) {
       const term = filters.nomeMorador.toLowerCase();
       results = results.filter((e) =>

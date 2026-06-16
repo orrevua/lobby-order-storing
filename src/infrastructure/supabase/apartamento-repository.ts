@@ -8,6 +8,7 @@ import type {
 
 type ApartamentoRow = {
   id: number;
+  condominio_id: string;
   numero: string;
   bloco: string;
   created_at: string;
@@ -16,6 +17,7 @@ type ApartamentoRow = {
 function toDomain(row: ApartamentoRow): Apartamento {
   return {
     id: row.id,
+    condominioId: row.condominio_id,
     numero: row.numero,
     bloco: row.bloco,
     createdAt: row.created_at,
@@ -25,10 +27,11 @@ function toDomain(row: ApartamentoRow): Apartamento {
 export class SupabaseApartamentoRepository implements ApartamentoRepository {
   constructor(private client: SupabaseClient) {}
 
-  async list(): Promise<Apartamento[]> {
+  async list(condominioId: string): Promise<Apartamento[]> {
     const { data, error } = await this.client
       .from('apartamentos')
       .select('*')
+      .eq('condominio_id', condominioId)
       .order('bloco', { ascending: true })
       .order('numero', { ascending: true });
 
@@ -53,7 +56,11 @@ export class SupabaseApartamentoRepository implements ApartamentoRepository {
   async create(input: CreateApartmentInput): Promise<Apartamento> {
     const { data, error } = await this.client
       .from('apartamentos')
-      .insert({ numero: input.numero, bloco: input.bloco })
+      .insert({
+        condominio_id: input.condominioId,
+        numero: input.numero,
+        bloco: input.bloco,
+      })
       .select()
       .single();
 
@@ -66,10 +73,7 @@ export class SupabaseApartamentoRepository implements ApartamentoRepository {
     return toDomain(data);
   }
 
-  async update(
-    id: number,
-    input: UpdateApartmentInput,
-  ): Promise<Apartamento> {
+  async update(id: number, input: UpdateApartmentInput): Promise<Apartamento> {
     const { data, error } = await this.client
       .from('apartamentos')
       .update({ numero: input.numero, bloco: input.bloco })

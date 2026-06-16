@@ -1,6 +1,8 @@
 import { searchPackages } from '@/application/use-cases/encomendas/search-packages';
 import { listApartments } from '@/application/use-cases/apartamentos/list-apartments';
 import { packageRepository, apartmentRepository } from '@/infrastructure/supabase/repositories';
+import { getServerUserWithCondo } from '@/infrastructure/supabase/server';
+import { redirect } from 'next/navigation';
 import { SearchFilters } from '@/components/consulta/search-filters';
 import { ResultsTable } from '@/components/consulta/results-table';
 import { PageHeader } from '@/components/layout/page-header';
@@ -11,8 +13,10 @@ type Props = {
 };
 
 export default async function ConsultaPage({ searchParams }: Props) {
-  const params = await searchParams;
+  const ctx = await getServerUserWithCondo();
+  if (!ctx) redirect('/login');
 
+  const params = await searchParams;
   const page = Number(params.page) || 1;
   const perPage = 20;
 
@@ -27,8 +31,8 @@ export default async function ConsultaPage({ searchParams }: Props) {
   };
 
   const [{ data: encomendas, total }, apartamentos] = await Promise.all([
-    searchPackages(packageRepository, filters),
-    listApartments(apartmentRepository),
+    searchPackages(packageRepository, ctx.condominioId, filters),
+    listApartments(apartmentRepository, ctx.condominioId),
   ]);
 
   const cleanParams: Record<string, string> = {};

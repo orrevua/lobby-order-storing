@@ -1,5 +1,6 @@
 export type Morador = {
   id: number;
+  condominioId: string;
   nome: string;
   contato: string | null;
   cpf: string | null;

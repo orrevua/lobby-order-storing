@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 const PUBLIC_PATHS = ['/login', '/signup', '/retirada']
 
 const ROLE_ALLOWED_PATHS: Record<string, string[]> = {
-  morador: ['/cadastro/moradores', '/cadastro/apartamentos'],
+  morador: ['/cadastro/moradores'],
 }
 
 function isPathAllowed(path: string, allowedPaths: string[]) {

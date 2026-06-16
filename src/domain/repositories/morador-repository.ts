@@ -2,6 +2,7 @@ import type { Apartamento } from '../entities/apartamento';
 import type { Morador } from '../entities/morador';
 
 export type CreateResidentInput = {
+  condominioId: string;
   nome: string;
   contato: string | null;
   cpf: string | null;
@@ -19,7 +20,7 @@ export type UpdateResidentInput = {
 };
 
 export interface MoradorRepository {
-  list(): Promise<(Morador & { apartamento: Apartamento | null })[]>;
+  list(condominioId: string): Promise<(Morador & { apartamento: Apartamento | null })[]>;
   listByUser(userId: string): Promise<(Morador & { apartamento: Apartamento | null })[]>;
   listByApartment(apartamentoId: number): Promise<Morador[]>;
   findById(id: number): Promise<Morador | null>;

@@ -2,11 +2,11 @@
 
 import { revalidatePath } from 'next/cache';
 import { residentRepository, storageService } from '@/infrastructure/supabase/repositories';
+import { getServerUserWithCondo } from '@/infrastructure/supabase/server';
 import { createResident as createResidentUC } from '@/application/use-cases/moradores/create-resident';
 import { updateResident as updateResidentUC } from '@/application/use-cases/moradores/update-resident';
 import { deleteResident as deleteResidentUC } from '@/application/use-cases/moradores/delete-resident';
 import { cleanCPF } from '@/domain/validators/cpf';
-import { getServerUser } from '@/infrastructure/supabase/server';
 import type { ActionResult } from '@/lib/types';
 import type { Morador } from '@/domain/entities';
 
@@ -19,6 +19,9 @@ async function extractSignatureFile(formData: FormData): Promise<{ buffer: Buffe
 }
 
 export async function createResident(formData: FormData): Promise<ActionResult<Morador>> {
+  const ctx = await getServerUserWithCondo();
+  if (!ctx) return { success: false, error: 'Não autenticado.' };
+
   const nome = formData.get('nome')?.toString().trim() ?? '';
   const contato = formData.get('contato')?.toString().trim() || null;
   const rawCpf = cleanCPF(formData.get('cpf')?.toString() ?? '');
@@ -26,8 +29,15 @@ export async function createResident(formData: FormData): Promise<ActionResult<M
   const apartamentoId = Number(formData.get('apartamento_id'));
 
   try {
-    const user = await getServerUser();
-    let morador = await createResidentUC(residentRepository, { nome, contato, cpf, signatureUrl: null, apartamentoId, createdBy: user?.id ?? null });
+    let morador = await createResidentUC(residentRepository, {
+      condominioId: ctx.condominioId,
+      nome,
+      contato,
+      cpf,
+      signatureUrl: null,
+      apartamentoId,
+      createdBy: ctx.userId,
+    });
 
     const sig = await extractSignatureFile(formData);
     if (sig) {

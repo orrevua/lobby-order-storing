@@ -21,6 +21,7 @@ const ALL_NAV: NavItem[] = [
     children: [
       { label: "Apartamentos", href: "/cadastro/apartamentos" },
       { label: "Moradores", href: "/cadastro/moradores" },
+      { label: "Convites", href: "/cadastro/convites" },
     ],
   },
 ];
@@ -30,7 +31,6 @@ const MORADOR_NAV: NavItem[] = [
     label: "Cadastro",
     href: "/cadastro",
     children: [
-      { label: "Apartamentos", href: "/cadastro/apartamentos" },
       { label: "Moradores", href: "/cadastro/moradores" },
     ],
   },
