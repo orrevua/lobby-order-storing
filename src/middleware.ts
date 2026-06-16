@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 const PUBLIC_PATHS = ['/login', '/signup', '/retirada']
 
 const ROLE_ALLOWED_PATHS: Record<string, string[]> = {
-  morador: ['/cadastro/moradores'],
+  morador: ['/cadastro/moradores', '/encomendas'],
 }
 
 function isPathAllowed(path: string, allowedPaths: string[]) {
@@ -39,9 +39,14 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
   const isPublic = PUBLIC_PATHS.some(p => path.startsWith(p))
 
-  if (isPublic) return response
-
   const { data: { user } } = await supabase.auth.getUser()
+
+  if (isPublic) {
+    if (user && (path.startsWith('/login') || path.startsWith('/signup'))) {
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+    return response
+  }
 
   if (!user) {
     return NextResponse.redirect(new URL('/login', request.url))

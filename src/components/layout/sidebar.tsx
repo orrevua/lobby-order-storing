@@ -27,6 +27,7 @@ const ALL_NAV: NavItem[] = [
 ];
 
 const MORADOR_NAV: NavItem[] = [
+  { label: "Encomendas", href: "/encomendas" },
   {
     label: "Cadastro",
     href: "/cadastro",
