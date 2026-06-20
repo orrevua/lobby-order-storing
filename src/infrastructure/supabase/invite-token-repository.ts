@@ -10,6 +10,7 @@ type InviteTokenRow = {
   expires_at: string | null;
   max_uses: number | null;
   use_count: number;
+  invalidated_at: string | null;
   created_at: string;
 };
 
@@ -22,6 +23,7 @@ function toDomain(row: InviteTokenRow): InviteToken {
     expiresAt: row.expires_at,
     maxUses: row.max_uses,
     useCount: row.use_count,
+    invalidatedAt: row.invalidated_at,
     createdAt: row.created_at,
   };
 }
@@ -83,6 +85,15 @@ export class SupabaseInviteTokenRepository implements InviteTokenRepository {
     const { error } = await this.client
       .from('invite_tokens')
       .update({ use_count: data.use_count + 1 })
+      .eq('id', id);
+
+    if (error) throw new Error(error.message);
+  }
+
+  async invalidate(id: string): Promise<void> {
+    const { error } = await this.client
+      .from('invite_tokens')
+      .update({ invalidated_at: new Date().toISOString() })
       .eq('id', id);
 
     if (error) throw new Error(error.message);

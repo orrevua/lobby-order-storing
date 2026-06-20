@@ -2,6 +2,7 @@ import { getServerUserWithCondo } from '@/infrastructure/supabase/server';
 import { redirect } from 'next/navigation';
 import { listInvites } from '@/lib/actions/invites';
 import { InviteForm } from '@/components/cadastro/invite-form';
+import { InvalidateInviteButton } from '@/components/cadastro/invalidate-invite-button';
 import { PageHeader } from '@/components/layout/page-header';
 
 export default async function ConvitesPage() {
@@ -28,11 +29,12 @@ export default async function ConvitesPage() {
                   <th className="px-4 py-3 text-left font-medium text-text-secondary">Usos</th>
                   <th className="px-4 py-3 text-left font-medium text-text-secondary">Expira em</th>
                   <th className="px-4 py-3 text-left font-medium text-text-secondary">Criado em</th>
+                  <th className="px-4 py-3 text-left font-medium text-text-secondary">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-bg-tertiary">
                 {invites.map((invite) => (
-                  <tr key={invite.id} className="hover:bg-bg-secondary">
+                  <tr key={invite.id} className={`hover:bg-bg-secondary ${invite.invalidatedAt ? 'opacity-50' : ''}`}>
                     <td className="px-4 py-3 text-text-primary">
                       <code className="text-xs break-all">/signup?token={invite.token.slice(0, 12)}...</code>
                     </td>
@@ -46,6 +48,13 @@ export default async function ConvitesPage() {
                     </td>
                     <td className="px-4 py-3 text-text-primary">
                       {new Date(invite.createdAt).toLocaleDateString('pt-BR')}
+                    </td>
+                    <td className="px-4 py-3">
+                      {invite.invalidatedAt ? (
+                        <span className="text-xs text-text-tertiary">Invalidado</span>
+                      ) : (
+                        <InvalidateInviteButton inviteId={invite.id} />
+                      )}
                     </td>
                   </tr>
                 ))}

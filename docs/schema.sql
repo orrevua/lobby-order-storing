@@ -120,5 +120,8 @@ CREATE INDEX idx_moradores_condominio ON moradores(condominio_id);
 CREATE INDEX idx_invite_tokens_token ON invite_tokens(token);
 CREATE INDEX idx_invite_tokens_condominio ON invite_tokens(condominio_id);
 
+-- 8. Invite invalidation
+ALTER TABLE invite_tokens ADD COLUMN invalidated_at TIMESTAMP WITH TIME ZONE;
+
 -- NOTE: Create a private storage bucket named 'signatures' in Supabase Dashboard > Storage.
 -- No public access. All uploads/reads go through API routes using the service role client.

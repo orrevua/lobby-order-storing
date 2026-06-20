@@ -13,4 +13,5 @@ export interface InviteTokenRepository {
   listByCondominium(condominioId: string): Promise<InviteToken[]>;
   create(data: CreateInviteTokenInput): Promise<InviteToken>;
   incrementUseCount(id: string): Promise<void>;
+  invalidate(id: string): Promise<void>;
 }

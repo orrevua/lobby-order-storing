@@ -6,5 +6,6 @@ export type InviteToken = {
   expiresAt: string | null;
   maxUses: number | null;
   useCount: number;
+  invalidatedAt: string | null;
   createdAt: string;
 };

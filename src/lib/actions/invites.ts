@@ -31,3 +31,15 @@ export async function listInvites(): Promise<InviteToken[]> {
   if (!ctx) return [];
   return inviteTokenRepository.listByCondominium(ctx.condominioId);
 }
+
+export async function invalidateInvite(id: string): Promise<ActionResult<null>> {
+  const ctx = await getServerUserWithCondo();
+  if (!ctx) return { success: false, error: 'Não autenticado.' };
+
+  try {
+    await inviteTokenRepository.invalidate(id);
+    return { success: true, data: null };
+  } catch (e) {
+    return { success: false, error: e instanceof Error ? e.message : 'Erro desconhecido.' };
+  }
+}

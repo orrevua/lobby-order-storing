@@ -12,6 +12,8 @@ export async function validateInvite(
 
   if (!invite) return { valid: false, reason: 'Convite inválido.' };
 
+  if (invite.invalidatedAt) return { valid: false, reason: 'Convite foi invalidado.' };
+
   if (invite.expiresAt && new Date(invite.expiresAt) < new Date()) {
     return { valid: false, reason: 'Convite expirado.' };
   }
