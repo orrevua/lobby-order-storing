@@ -135,7 +135,8 @@ export function ConfirmationForm({ sessionId, moradorNome, prefillCpf, signature
 
       {step === 'submitting' && (
         <div className="py-8 text-center">
-          <p className="text-sm text-text-tertiary">Confirmando retirada...</p>
+          <div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+          <p className="text-sm text-text-tertiary">Processando...</p>
         </div>
       )}
 

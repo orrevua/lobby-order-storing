@@ -10,10 +10,11 @@ type Props = {
   expiresAt: string;
   qrCodeUrl: string;
   onClose: () => void;
+  onConfirmed: () => void;
   onManual: () => void;
 };
 
-export function QrModal({ sessionId, expiresAt, qrCodeUrl, onClose, onManual }: Props) {
+export function QrModal({ sessionId, expiresAt, qrCodeUrl, onClose, onConfirmed, onManual }: Props) {
   const router = useRouter();
   const [state, setState] = useState<'waiting' | 'confirmed' | 'expired'>('waiting');
   const [remaining, setRemaining] = useState(() => {
@@ -36,10 +37,9 @@ export function QrModal({ sessionId, expiresAt, qrCodeUrl, onClose, onManual }: 
   const handleConfirmed = useCallback(() => {
     setState('confirmed');
     setTimeout(() => {
-      onClose();
-      router.refresh();
-    }, 2000);
-  }, [onClose, router]);
+      onConfirmed();
+    }, 3000);
+  }, [onConfirmed]);
 
   useRealtimeSession(sessionId, handleConfirmed);
 

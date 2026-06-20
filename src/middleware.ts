@@ -43,13 +43,17 @@ export async function middleware(request: NextRequest) {
 
   if (isPublic) {
     if (user && (path.startsWith('/login') || path.startsWith('/signup'))) {
-      return NextResponse.redirect(new URL('/', request.url))
+      const redirectTo = request.nextUrl.searchParams.get('redirectTo')
+      const safeRedirect = redirectTo?.startsWith('/') && !redirectTo.startsWith('//') ? redirectTo : '/'
+      return NextResponse.redirect(new URL(safeRedirect, request.url))
     }
     return response
   }
 
   if (!user) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('redirectTo', path + request.nextUrl.search)
+    return NextResponse.redirect(loginUrl)
   }
 
   const role = user.app_metadata.role || 'morador'

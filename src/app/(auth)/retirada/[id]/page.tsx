@@ -9,10 +9,9 @@ export default async function RetiradaPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const ctx = await getServerUserWithCondo();
-  if (!ctx) redirect('/login');
-
   const { id } = await params;
+  const ctx = await getServerUserWithCondo();
+  if (!ctx) redirect(`/login?redirectTo=/retirada/${id}`);
   const result = await findWithdrawalSession(apartmentRepository, withdrawalSessionRepository, packageRepository, id);
 
   if (result.status === 'not_found') {

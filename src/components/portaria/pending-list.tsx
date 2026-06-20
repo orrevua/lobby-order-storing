@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import type { EncomendaComMorador } from '@/domain/entities';
 import { QrModal } from './qr-modal';
 import { ManualConfirmationForm } from './manual-confirmation-form';
@@ -48,6 +49,20 @@ export function PendingList({ encomendas }: Props) {
   const [manualSessionId, setManualSessionId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmedIds, setConfirmedIds] = useState<Set<number>>(new Set());
+  const router = useRouter();
+
+  const handleSessionConfirmed = useCallback(() => {
+    if (selected) {
+      setConfirmedIds(new Set(selected.ids));
+    }
+    setSession(null);
+    setSelected(null);
+    setTimeout(() => {
+      setConfirmedIds(new Set());
+      router.refresh();
+    }, 2000);
+  }, [selected, router]);
 
   const groups = groupByApartamento(encomendas);
 
@@ -175,13 +190,22 @@ export function PendingList({ encomendas }: Props) {
                 {group.items.map((enc) => {
                   const checked = isGroupSelected && selected.ids.has(enc.id);
                   return (
-                    <label key={enc.id} className="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-bg-secondary">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggleItem(group.apartamentoId, enc.id)}
-                        className="h-4 w-4 accent-accent"
-                      />
+                    <label
+                      key={enc.id}
+                      className={`flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-bg-secondary transition-all duration-700 ${confirmedIds.has(enc.id) ? 'opacity-40 bg-success/5' : ''}`}
+                    >
+                      {confirmedIds.has(enc.id) ? (
+                        <svg className="h-4 w-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleItem(group.apartamentoId, enc.id)}
+                          className="h-4 w-4 accent-accent"
+                        />
+                      )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-text-primary">{enc.morador.nome}</p>
                         <p className="text-xs text-text-tertiary">
@@ -205,6 +229,7 @@ export function PendingList({ encomendas }: Props) {
           expiresAt={session.expiresAt}
           qrCodeUrl={session.qrCodeUrl}
           onClose={() => { setSession(null); setSelected(null); }}
+          onConfirmed={handleSessionConfirmed}
           onManual={() => { setManualSessionId(session.sessionId); setSession(null); }}
         />
       )}
